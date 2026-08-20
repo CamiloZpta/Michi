@@ -1,0 +1,119 @@
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import { PawLogo } from '@/components/PawLogo'
+
+export default function LoginPage() {
+  const router = useRouter()
+  const supabase = createClient()
+  const [modo, setModo] = useState<'login' | 'signup'>('login')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [codigoInvitacion, setCodigoInvitacion] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [cargando, setCargando] = useState(false)
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError(null)
+    setCargando(true)
+
+    if (modo === 'login') {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) setError(error.message)
+      else router.push('/')
+    } else {
+      const { data, error } = await supabase.auth.signUp({ email, password })
+      if (error) {
+        setError(error.message)
+      } else if (data.user) {
+        // La creación del household (o el canje del código de invitación)
+        // se resuelve en /api/onboarding la primera vez que entra al dashboard.
+        if (codigoInvitacion) {
+          document.cookie = `michi_invite=${codigoInvitacion}; path=/; max-age=3600`
+        }
+        router.push('/')
+      }
+    }
+    setCargando(false)
+  }
+
+  return (
+    <main className="min-h-screen flex items-center justify-center bg-beige-100 px-4">
+      <div className="w-full max-w-sm">
+        <div className="flex flex-col items-center mb-8">
+          <PawLogo size={48} className="text-rose-500 mb-2" />
+          <h1 className="text-3xl font-display font-semibold">Michi</h1>
+          <p className="text-ink-soft text-sm mt-1">Control de Tinto y Crema</p>
+        </div>
+
+        <div className="card-michi">
+          <div className="flex rounded-full bg-beige-100 p-1 mb-6">
+            <button
+              className={`flex-1 rounded-full py-2 text-sm font-medium transition-colors ${modo === 'login' ? 'bg-rose-500 text-beige-50' : 'text-ink-soft'}`}
+              onClick={() => setModo('login')}
+              type="button"
+            >
+              Iniciar sesión
+            </button>
+            <button
+              className={`flex-1 rounded-full py-2 text-sm font-medium transition-colors ${modo === 'signup' ? 'bg-rose-500 text-beige-50' : 'text-ink-soft'}`}
+              onClick={() => setModo('signup')}
+              type="button"
+            >
+              Crear cuenta
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div>
+              <label className="label-michi">Correo</label>
+              <input
+                type="email"
+                required
+                className="input-michi"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="label-michi">Contraseña</label>
+              <input
+                type="password"
+                required
+                minLength={6}
+                className="input-michi"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            {modo === 'signup' && (
+              <div>
+                <label className="label-michi">Código de invitación (opcional)</label>
+                <input
+                  type="text"
+                  placeholder="Déjalo vacío si vas a crear el hogar"
+                  className="input-michi"
+                  value={codigoInvitacion}
+                  onChange={(e) => setCodigoInvitacion(e.target.value)}
+                />
+                <p className="text-xs text-ink-soft mt-1">
+                  Si tu pareja ya creó el hogar, pídele el código para unirte y compartir a Tinto y Crema.
+                </p>
+              </div>
+            )}
+
+            {error && <p className="text-sm text-alerta">{error}</p>}
+
+            <button type="submit" disabled={cargando} className="btn-primary mt-2">
+              {cargando ? 'Un momento…' : modo === 'login' ? 'Entrar' : 'Crear cuenta'}
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+  )
+}
