@@ -157,6 +157,21 @@ create policy "CRUD gastos del hogar" on gastos for all
   with check (is_household_member(household_id));
 
 -- ------------------------------------------
+-- Crear hogar + membresía admin de forma atómica
+-- (evita el problema de RLS con RETURNING antes de ser miembro)
+-- ------------------------------------------
+create or replace function create_household(nombre_hogar text default 'Nuestro hogar')
+returns uuid as $$
+declare
+  nuevo_id uuid;
+begin
+  insert into households (nombre) values (nombre_hogar) returning id into nuevo_id;
+  insert into household_members (household_id, user_id, rol) values (nuevo_id, auth.uid(), 'admin');
+  return nuevo_id;
+end;
+$$ language plpgsql security definer;
+
+-- ------------------------------------------
 -- Categorías por defecto al crear un hogar nuevo
 -- ------------------------------------------
 create or replace function seed_default_categorias()

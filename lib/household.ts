@@ -45,20 +45,17 @@ export async function getOrCreateHousehold(): Promise<string> {
     }
   }
 
-  // No hay invitación válida: crea un hogar nuevo
-  const { data: nuevoHogar, error } = await supabase
-    .from('households')
-    .insert({ nombre: 'Nuestro hogar' })
-    .select('id')
-    .single()
-
-  if (error || !nuevoHogar) throw new Error('No se pudo crear el hogar')
-
-  await supabase.from('household_members').insert({
-    household_id: nuevoHogar.id,
-    user_id: user.id,
-    rol: 'admin',
+  // No hay invitación válida: crea un hogar nuevo de forma atómica
+  // (households + household_members en una sola función security definer,
+  // así se evita el problema de RLS al intentar leer la fila recién creada
+  // antes de que el usuario conste como miembro).
+  const { data: nuevoHogarId, error } = await supabase.rpc('create_household', {
+    nombre_hogar: 'Nuestro hogar',
   })
 
-  return nuevoHogar.id
+  if (error || !nuevoHogarId) {
+    throw new Error(`No se pudo crear el hogar: ${error?.message ?? 'sin datos devueltos'}`)
+  }
+
+  return nuevoHogarId as string
 }
