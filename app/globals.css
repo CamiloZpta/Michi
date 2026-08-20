@@ -5,14 +5,10 @@
 @layer base {
   body {
     @apply bg-beige-100 text-ink font-body antialiased;
-    /* Textura sutil de papel: puntitos finos, no un patrón genérico de gradiente */
-    background-image: radial-gradient(rgba(74, 60, 54, 0.05) 1px, transparent 1px);
-    background-size: 14px 14px;
   }
   h1, h2, h3 {
     @apply font-display text-ink;
   }
-  h1 { @apply italic; }
   :focus-visible {
     outline: 2px solid theme('colors.rose.700');
     outline-offset: 2px;
@@ -20,78 +16,64 @@
 }
 
 @layer components {
-  /* ===== Tarjeta tipo "recibo" =====
-     Borde punteado arriba simulando perforación, esquina superior
-     con una franja de "washi tape" en rosa, ligera inclinación al pasar el mouse. */
-  .card-michi {
-    @apply relative bg-beige-50 rounded-b-2xl rounded-tr-2xl p-6 border border-ink/10;
-    border-top: 2px dashed theme('colors.rose.300');
-    box-shadow: 3px 4px 0 0 rgba(74, 60, 54, 0.08);
+  /* Wordmark "Michi" — la única letra en Pacifico, todo lo demás usa la
+     pareja tipográfica redondeada Baloo 2 / Quicksand. */
+  .logo-wordmark {
+    @apply font-logo text-rose-700;
   }
 
-  /* ===== Botones tipo "sello de huella" =====
-     Doble borde, ligera rotación, se "endereza" al pasar el mouse -
-     como si estampara. */
+  /* ===== Tarjetas ===== 
+     Esquinas suaves y redondeadas, sombra ligera, un acento de color
+     arriba en vez de un borde punteado rígido. */
+  .card-michi {
+    @apply relative bg-beige-50 rounded-3xl p-6 border border-rose-100;
+    box-shadow: 0 6px 20px -6px rgba(74, 60, 54, 0.12);
+  }
+
+  /* ===== Botones ===== */
   .btn-primary {
-    @apply bg-rose-500 text-beige-50 font-body font-semibold uppercase text-sm tracking-wide
-           rounded-lg px-5 py-2.5 transition-all duration-150 ease-out;
-    border: 2px solid theme('colors.ink.DEFAULT');
-    box-shadow: 2px 2px 0 0 theme('colors.ink.DEFAULT');
-    transform: rotate(-0.6deg);
-  }
-  .btn-primary:hover {
-    @apply bg-rose-700;
-    transform: rotate(0deg) translate(1px, 1px);
-    box-shadow: 1px 1px 0 0 theme('colors.ink.DEFAULT');
-  }
-  .btn-primary:active {
-    transform: translate(2px, 2px);
-    box-shadow: 0 0 0 0 theme('colors.ink.DEFAULT');
+    @apply bg-rose-500 hover:bg-rose-700 text-beige-50 font-display font-semibold
+           rounded-full px-6 py-2.5 transition-colors duration-150 ease-out shadow-sm;
   }
   .btn-primary:disabled {
     @apply opacity-50 cursor-not-allowed;
   }
-
   .btn-secondary {
-    @apply bg-transparent text-ink font-body font-semibold uppercase text-sm tracking-wide
-           rounded-lg px-5 py-2.5 transition-all duration-150 ease-out;
-    border: 2px solid theme('colors.ink.DEFAULT');
-  }
-  .btn-secondary:hover {
-    @apply bg-rose-50;
+    @apply bg-transparent border-2 border-rose-300 text-ink hover:bg-rose-50 font-display font-semibold
+           rounded-full px-6 py-2.5 transition-colors duration-150 ease-out;
   }
 
-  /* ===== Campos tipo "línea de cuaderno" en vez de cajas cerradas ===== */
+  /* ===== Campos de formulario ===== */
   .input-michi {
-    @apply bg-transparent border-0 border-b-2 border-rose-200 rounded-none px-1 py-2
-           text-ink placeholder:text-ink-soft/50 focus:border-rose-700 outline-none w-full font-body;
+    @apply bg-beige-50 border-2 border-rose-100 rounded-2xl px-4 py-2.5
+           text-ink placeholder:text-ink-soft/50 focus:border-rose-400 outline-none w-full font-body;
     transition: border-color 0.15s ease-out;
-  }
-  select.input-michi {
-    @apply bg-beige-50;
   }
 
   .label-michi {
-    @apply text-xs text-ink-soft font-mono uppercase tracking-widest mb-1.5 block;
+    @apply text-sm text-ink-soft font-semibold mb-1.5 block;
   }
 
   .stat-number {
-    @apply font-mono text-3xl text-ink;
+    @apply font-display font-bold text-3xl text-ink;
   }
 
-  /* ===== Pestañas de carpeta (navegación) ===== */
-  .folder-tab {
-    @apply relative font-body font-medium text-sm px-4 py-2.5 text-ink-soft transition-colors;
-    clip-path: polygon(8% 0, 92% 0, 100% 100%, 0% 100%);
+  /* ===== Pestañas de navegación =====
+     Píldoras suaves y redondeadas, la activa se rellena de color. */
+  .tab-pill {
+    @apply relative font-display font-semibold text-sm px-4 py-2 rounded-full whitespace-nowrap
+           text-ink-soft transition-colors duration-150;
   }
-  .folder-tab[data-active='true'] {
-    @apply bg-beige-50 text-ink font-semibold;
+  .tab-pill[data-active='true'] {
+    @apply bg-rose-500 text-beige-50 shadow-sm;
+  }
+  .tab-pill:not([data-active='true']):hover {
+    @apply bg-rose-50 text-ink;
   }
 
-  /* Sello circular decorativo (usado en confirmaciones / fecha de hoy) */
+  /* Sello circular decorativo (huella), usado como acento pequeño */
   .sello-fecha {
-    @apply inline-flex items-center justify-center rounded-full border-2 border-stamp text-stamp
-           font-mono text-xs uppercase tracking-wider px-3 py-1;
-    transform: rotate(-4deg);
+    @apply inline-flex items-center justify-center rounded-full border-2 border-rose-300 text-rose-700
+           font-display text-xs px-3 py-1;
   }
 }

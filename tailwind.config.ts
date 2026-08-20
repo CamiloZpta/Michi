@@ -34,9 +34,9 @@ const config: Config = {
         stamp: '#B5493F', // rojo sello, solo para el "timbre" de fecha/confirmación
       },
       fontFamily: {
-        display: ['var(--font-fraunces)', 'serif'],
-        body: ['var(--font-work-sans)', 'sans-serif'],
-        mono: ['var(--font-courier)', 'monospace'],
+        logo: ['var(--font-pacifico)', 'cursive'],
+        display: ['var(--font-baloo)', 'sans-serif'],
+        body: ['var(--font-quicksand)', 'sans-serif'],
       },
       borderRadius: {
         michi: '1.25rem',

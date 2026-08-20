@@ -1,33 +1,37 @@
 import type { Metadata } from 'next'
-import { Fraunces, Work_Sans, Courier_Prime } from 'next/font/google'
+import { Pacifico, Baloo_2, Quicksand } from 'next/font/google'
 import './globals.css'
 
-const fraunces = Fraunces({
+const pacifico = Pacifico({
   subsets: ['latin'],
-  variable: '--font-fraunces',
-  weight: ['500', '600'],
-  style: ['italic', 'normal'],
+  variable: '--font-pacifico',
+  weight: '400',
 })
-const workSans = Work_Sans({
+const baloo = Baloo_2({
   subsets: ['latin'],
-  variable: '--font-work-sans',
-  weight: ['400', '500', '600'],
+  variable: '--font-baloo',
+  weight: ['600', '700'],
 })
-const courier = Courier_Prime({
+const quicksand = Quicksand({
   subsets: ['latin'],
-  variable: '--font-courier',
-  weight: ['400', '700'],
+  variable: '--font-quicksand',
+  weight: ['400', '500', '600', '700'],
 })
 
 export const metadata: Metadata = {
-  title: 'Michi · Control de Tinto y Crema',
-  description: 'El cuadernillo de gastos y cuidado de nuestros gatos',
+  title: 'Michi · Gastos y cuidado de gatos',
+  description: 'Lleva el control de los gastos y el cuidado de tus gatos, en familia.',
+  icons: {
+    icon: '/icon.svg',
+    apple: '/apple-icon.png',
+  },
+  manifest: '/manifest.json',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className={`${fraunces.variable} ${workSans.variable} ${courier.variable}`}>
+      <body className={`${pacifico.variable} ${baloo.variable} ${quicksand.variable}`}>
         {children}
       </body>
     </html>

@@ -15,16 +15,11 @@ export function TabNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="flex gap-1 overflow-x-auto -mb-px">
+    <nav className="flex gap-2 overflow-x-auto pb-1">
       {NAV.map((item) => {
         const activo = pathname === item.href
         return (
-          <Link
-            key={item.href}
-            href={item.href}
-            data-active={activo}
-            className="folder-tab whitespace-nowrap"
-          >
+          <Link key={item.href} href={item.href} data-active={activo} className="tab-pill">
             {item.label}
           </Link>
         )

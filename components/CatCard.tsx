@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { CatAvatar, type ColorPelajeKey, type PatronPelaje } from './CatAvatar'
+import { CatAvatar, type ColorPelajeKey, type PatronPelaje, type OjosKey } from './CatAvatar'
 import { calcularEdad } from '@/lib/metrics'
 import { RegistrarPesoForm } from './RegistrarPesoForm'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
@@ -15,6 +15,7 @@ type Gato = {
   contextura: string | null
   color_pelaje: string | null
   patron_pelaje: string | null
+  ojos: string | null
   cat_weights: CatWeight[]
 }
 
@@ -39,6 +40,7 @@ export function CatCard({ gato }: { gato: Gato }) {
         <CatAvatar
           colorPelaje={(gato.color_pelaje as ColorPelajeKey) ?? 'naranja_blanco'}
           patron={(gato.patron_pelaje as PatronPelaje) ?? 'atigrado'}
+          ojos={(gato.ojos as OjosKey) ?? 'cafe'}
           size={72}
         />
         <div>

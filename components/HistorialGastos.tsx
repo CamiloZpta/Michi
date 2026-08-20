@@ -40,10 +40,10 @@ export function HistorialGastos({ gastos }: { gastos: GastoRow[] }) {
                 {g.categorias?.icono} {g.categorias?.nombre}
               </td>
               <td className="py-2 pr-4">{g.producto}</td>
-              <td className="py-2 pr-4 whitespace-nowrap font-mono">
+              <td className="py-2 pr-4 whitespace-nowrap">
                 {g.cantidad_total} {g.unidad}
               </td>
-              <td className="py-2 pr-4 text-right font-mono">{fmt(g.precio)}</td>
+              <td className="py-2 pr-4 text-right font-display font-semibold">{fmt(g.precio)}</td>
             </tr>
           ))}
         </tbody>

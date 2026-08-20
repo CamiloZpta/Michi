@@ -1,8 +1,8 @@
-# 🐾 Michi — Control de Tinto y Crema
+# 🐾 Michi — Gastos y cuidado de gatos
 
-App para llevar el control de gastos y cuidado de nuestros gatos. Reemplaza el
-flujo anterior (Streamlit + Google Sheets/Forms) por **Next.js + Supabase**,
-lista para desplegar en **Vercel** desde **GitHub**.
+App para llevar el control de gastos y cuidado de los gatos de la casa.
+Reemplaza el flujo anterior (Streamlit + Google Sheets/Forms) por
+**Next.js + Supabase**, lista para desplegar en **Vercel** desde **GitHub**.
 
 ## Qué incluye esta primera versión
 
@@ -82,9 +82,6 @@ un CSV ya listo para importar con los datos del Excel que me compartiste.
 
 ## Pendiente / siguientes pasos
 
-- Ajustar los avatares de Tinto y Crema a como se ven de verdad (mándame las
-  fotos y afino los presets de color/patrón, o agregamos soporte para subir
-  foto real via Supabase Storage si prefieren eso al avatar ilustrado).
 - Página de edición/borrado de gastos y gatos (por ahora solo alta).
 - Notificaciones (ej. email o push) cuando el medidor de huellitas entra en
   zona crítica.

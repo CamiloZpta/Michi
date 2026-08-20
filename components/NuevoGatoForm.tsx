@@ -3,7 +3,14 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { CatAvatar, COLOR_PELAJE_PRESETS, type ColorPelajeKey, type PatronPelaje } from './CatAvatar'
+import {
+  CatAvatar,
+  COLOR_PELAJE_PRESETS,
+  OJOS_PRESETS,
+  type ColorPelajeKey,
+  type PatronPelaje,
+  type OjosKey,
+} from './CatAvatar'
 
 export function NuevoGatoForm({ householdId }: { householdId: string }) {
   const router = useRouter()
@@ -11,6 +18,7 @@ export function NuevoGatoForm({ householdId }: { householdId: string }) {
   const [guardando, setGuardando] = useState(false)
   const [colorPelaje, setColorPelaje] = useState<ColorPelajeKey>('naranja_blanco')
   const [patron, setPatron] = useState<PatronPelaje>('atigrado')
+  const [ojos, setOjos] = useState<OjosKey>('cafe')
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -25,6 +33,7 @@ export function NuevoGatoForm({ householdId }: { householdId: string }) {
       contextura: form.get('contextura'),
       color_pelaje: colorPelaje,
       patron_pelaje: patron,
+      ojos,
     })
 
     setGuardando(false)
@@ -37,14 +46,14 @@ export function NuevoGatoForm({ householdId }: { householdId: string }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-6">
       <div className="flex flex-col items-center gap-2">
-        <CatAvatar colorPelaje={colorPelaje} patron={patron} size={100} />
+        <CatAvatar colorPelaje={colorPelaje} patron={patron} ojos={ojos} size={100} />
         <span className="text-xs text-ink-soft">Vista previa</span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
         <div>
           <label className="label-michi">Nombre</label>
-          <input name="nombre" required className="input-michi" placeholder="Ej. Tinto" />
+          <input name="nombre" required className="input-michi" placeholder="Nombre del gato" />
         </div>
         <div>
           <label className="label-michi">Sexo</label>
@@ -92,6 +101,20 @@ export function NuevoGatoForm({ householdId }: { householdId: string }) {
             <option value="atigrado">Atigrado</option>
             <option value="manchado">Manchado</option>
             <option value="bicolor">Bicolor</option>
+            <option value="colorpoint">Point (orejas/cara oscuras, tipo siamés)</option>
+          </select>
+        </div>
+        <div>
+          <label className="label-michi">Color de ojos</label>
+          <select
+            className="input-michi"
+            value={ojos}
+            onChange={(e) => setOjos(e.target.value as OjosKey)}
+          >
+            <option value="cafe">Café / ámbar oscuro</option>
+            <option value="azul">Azul</option>
+            <option value="verde">Verde</option>
+            <option value="ambar">Ámbar claro</option>
           </select>
         </div>
 

@@ -9,6 +9,31 @@
 create extension if not exists "pgcrypto";
 
 -- ------------------------------------------
+-- PERFILES DE USUARIO (nombre visible para el resto del hogar)
+-- ------------------------------------------
+create table profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  nombre text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table profiles enable row level security;
+
+create policy "Ver mi perfil y el de mi hogar" on profiles for select
+  using (
+    id = auth.uid()
+    or exists (
+      select 1 from household_members hm1
+      join household_members hm2 on hm1.household_id = hm2.household_id
+      where hm1.user_id = auth.uid() and hm2.user_id = profiles.id
+    )
+  );
+create policy "Crear mi perfil" on profiles for insert
+  with check (id = auth.uid());
+create policy "Editar mi perfil" on profiles for update
+  using (id = auth.uid());
+
+-- ------------------------------------------
 -- HOGARES (households)
 -- Un hogar agrupa a los usuarios que comparten gatos y gastos.
 -- ------------------------------------------
@@ -66,7 +91,8 @@ create table cats (
   fecha_nacimiento_aprox date,
   contextura contextura_gato default 'normal',
   color_pelaje text, -- clave del preset de color, ej. 'naranja_blanco'
-  patron_pelaje text default 'solido', -- 'solido' | 'atigrado' | 'manchado' | 'bicolor'
+  patron_pelaje text default 'solido', -- 'solido' | 'atigrado' | 'manchado' | 'bicolor' | 'colorpoint'
+  ojos text default 'cafe', -- 'cafe' | 'azul' | 'verde' | 'ambar'
   avatar_seed text, -- para variaciones deterministas del avatar SVG
   activo boolean not null default true,
   created_at timestamptz not null default now()

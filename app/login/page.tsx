@@ -9,6 +9,7 @@ export default function LoginPage() {
   const router = useRouter()
   const supabase = createClient()
   const [modo, setModo] = useState<'login' | 'signup'>('login')
+  const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [codigoInvitacion, setCodigoInvitacion] = useState('')
@@ -29,8 +30,11 @@ export default function LoginPage() {
       if (error) {
         setError(error.message)
       } else if (data.user) {
-        // La creación del household (o el canje del código de invitación)
-        // se resuelve en /api/onboarding la primera vez que entra al dashboard.
+        // Guarda el nombre en su perfil (solo funciona si hay sesión inmediata,
+        // es decir si la confirmación por correo está desactivada en Supabase).
+        if (data.session) {
+          await supabase.from('profiles').upsert({ id: data.user.id, nombre })
+        }
         if (codigoInvitacion) {
           document.cookie = `michi_invite=${codigoInvitacion}; path=/; max-age=3600`
         }
@@ -44,22 +48,22 @@ export default function LoginPage() {
     <main className="min-h-screen flex items-center justify-center bg-beige-100 px-4">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8">
-          <PawLogo size={48} className="text-rose-500 mb-2" />
-          <h1 className="text-3xl font-display font-semibold">Michi</h1>
-          <p className="text-ink-soft text-sm mt-1">Control de Tinto y Crema</p>
+          <PawLogo size={48} className="text-rose-500 mb-1" />
+          <h1 className="logo-wordmark text-5xl">Michi</h1>
+          <p className="text-ink-soft text-sm mt-2">Gastos y cuidado de tus gatos, en familia</p>
         </div>
 
         <div className="card-michi">
-          <div className="flex border-b-2 border-rose-200 mb-6 -mt-2">
+          <div className="flex bg-beige-100 rounded-full p-1 mb-6">
             <button
-              className={`flex-1 py-2.5 text-sm font-semibold uppercase tracking-wide transition-colors border-b-2 -mb-0.5 ${modo === 'login' ? 'border-ink text-ink' : 'border-transparent text-ink-soft'}`}
+              className={`flex-1 py-2 text-sm rounded-full font-display font-semibold transition-colors ${modo === 'login' ? 'bg-rose-500 text-beige-50' : 'text-ink-soft'}`}
               onClick={() => setModo('login')}
               type="button"
             >
               Iniciar sesión
             </button>
             <button
-              className={`flex-1 py-2.5 text-sm font-semibold uppercase tracking-wide transition-colors border-b-2 -mb-0.5 ${modo === 'signup' ? 'border-ink text-ink' : 'border-transparent text-ink-soft'}`}
+              className={`flex-1 py-2 text-sm rounded-full font-display font-semibold transition-colors ${modo === 'signup' ? 'bg-rose-500 text-beige-50' : 'text-ink-soft'}`}
               onClick={() => setModo('signup')}
               type="button"
             >
@@ -68,6 +72,19 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {modo === 'signup' && (
+              <div>
+                <label className="label-michi">Tu nombre</label>
+                <input
+                  type="text"
+                  required
+                  className="input-michi"
+                  placeholder="Ej. Ana"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                />
+              </div>
+            )}
             <div>
               <label className="label-michi">Correo</label>
               <input
@@ -101,7 +118,7 @@ export default function LoginPage() {
                   onChange={(e) => setCodigoInvitacion(e.target.value)}
                 />
                 <p className="text-xs text-ink-soft mt-1">
-                  Si tu pareja ya creó el hogar, pídele el código para unirte y compartir a Tinto y Crema.
+                  Si alguien de tu hogar ya lo creó, pídele el código para unirte y compartir los gatos.
                 </p>
               </div>
             )}
