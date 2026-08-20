@@ -50,16 +50,16 @@ export default function LoginPage() {
         </div>
 
         <div className="card-michi">
-          <div className="flex rounded-full bg-beige-100 p-1 mb-6">
+          <div className="flex border-b-2 border-rose-200 mb-6 -mt-2">
             <button
-              className={`flex-1 rounded-full py-2 text-sm font-medium transition-colors ${modo === 'login' ? 'bg-rose-500 text-beige-50' : 'text-ink-soft'}`}
+              className={`flex-1 py-2.5 text-sm font-semibold uppercase tracking-wide transition-colors border-b-2 -mb-0.5 ${modo === 'login' ? 'border-ink text-ink' : 'border-transparent text-ink-soft'}`}
               onClick={() => setModo('login')}
               type="button"
             >
               Iniciar sesión
             </button>
             <button
-              className={`flex-1 rounded-full py-2 text-sm font-medium transition-colors ${modo === 'signup' ? 'bg-rose-500 text-beige-50' : 'text-ink-soft'}`}
+              className={`flex-1 py-2.5 text-sm font-semibold uppercase tracking-wide transition-colors border-b-2 -mb-0.5 ${modo === 'signup' ? 'border-ink text-ink' : 'border-transparent text-ink-soft'}`}
               onClick={() => setModo('signup')}
               type="button"
             >

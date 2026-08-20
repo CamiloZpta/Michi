@@ -31,11 +31,12 @@ const config: Config = {
           soft: '#7A6A62',
         },
         alerta: '#C4665B',
+        stamp: '#B5493F', // rojo sello, solo para el "timbre" de fecha/confirmación
       },
       fontFamily: {
         display: ['var(--font-fraunces)', 'serif'],
-        body: ['var(--font-jakarta)', 'sans-serif'],
-        mono: ['var(--font-mono)', 'monospace'],
+        body: ['var(--font-work-sans)', 'sans-serif'],
+        mono: ['var(--font-courier)', 'monospace'],
       },
       borderRadius: {
         michi: '1.25rem',

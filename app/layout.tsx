@@ -1,33 +1,33 @@
 import type { Metadata } from 'next'
-import { Fraunces, Plus_Jakarta_Sans, Space_Mono } from 'next/font/google'
+import { Fraunces, Work_Sans, Courier_Prime } from 'next/font/google'
 import './globals.css'
 
 const fraunces = Fraunces({
   subsets: ['latin'],
   variable: '--font-fraunces',
-  weight: ['500', '600', '700'],
-  style: ['normal', 'italic'],
+  weight: ['500', '600'],
+  style: ['italic', 'normal'],
 })
-const jakarta = Plus_Jakarta_Sans({
+const workSans = Work_Sans({
   subsets: ['latin'],
-  variable: '--font-jakarta',
-  weight: ['400', '500', '600', '700'],
+  variable: '--font-work-sans',
+  weight: ['400', '500', '600'],
 })
-const mono = Space_Mono({
+const courier = Courier_Prime({
   subsets: ['latin'],
-  variable: '--font-mono',
+  variable: '--font-courier',
   weight: ['400', '700'],
 })
 
 export const metadata: Metadata = {
   title: 'Michi · Control de Tinto y Crema',
-  description: 'Seguimiento de gastos y cuidado de nuestros gatos',
+  description: 'El cuadernillo de gastos y cuidado de nuestros gatos',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className={`${fraunces.variable} ${jakarta.variable} ${mono.variable}`}>
+      <body className={`${fraunces.variable} ${workSans.variable} ${courier.variable}`}>
         {children}
       </body>
     </html>
