@@ -24,15 +24,24 @@ Reemplaza el flujo anterior (Streamlit + Google Sheets/Forms) por
 
 ## 1. Crear el proyecto en Supabase
 
-1. Ve a [supabase.com](https://supabase.com) → *New project*.
-2. Una vez creado, entra a **SQL Editor** → *New query*, pega el contenido
-   completo de [`supabase/schema.sql`](./supabase/schema.sql) y ejecútalo.
-   Esto crea todas las tablas, políticas de seguridad (RLS) y los triggers
-   (incluyendo las categorías por defecto para cada hogar nuevo).
-3. Ve a **Project Settings → API** y copia:
+**¿Proyecto nuevo desde cero?** Ve a [supabase.com](https://supabase.com) →
+*New project*. Una vez creado, entra a **SQL Editor** → *New query*, pega el
+contenido completo de [`supabase/schema.sql`](./supabase/schema.sql) y
+ejecútalo. Ya incluye todo (tablas, RLS, funciones) — no necesitas correr
+nada de la carpeta `supabase/migrations/`.
+
+**¿Ya tienes una base de datos de Michi corriendo?** No vuelvas a correr
+`schema.sql` completo. En vez de eso, ve a `supabase/migrations/` y corre
+cada archivo **en orden** (001, 002, 003…) en el SQL Editor, uno a la vez.
+Cada uno describe qué arregla o agrega, y son seguros de re-ejecutar aunque
+ya hayas corrido alguno antes (no van a fallar por duplicado).
+
+Cualquiera de los dos caminos, después:
+
+1. Ve a **Project Settings → API** y copia:
    - `Project URL` → será tu `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public key` → será tu `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-4. (Opcional pero recomendado) En **Authentication → Providers**, desactiva
+2. (Opcional pero recomendado) En **Authentication → Providers**, desactiva
    la confirmación por correo si quieren entrar de inmediato sin verificar
    email, o déjala activa para más seguridad.
 

@@ -9,6 +9,7 @@ const NAV = [
   { href: '/gastos', label: 'Gastos' },
   { href: '/gatos', label: 'Nuestros gatos' },
   { href: '/hogar', label: 'Hogar' },
+  { href: '/configuracion', label: 'Configuración' },
 ]
 
 export function TabNav() {

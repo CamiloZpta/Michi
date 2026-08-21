@@ -14,6 +14,7 @@ create extension if not exists "pgcrypto";
 create table profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   nombre text not null,
+  hogar_activo_id uuid, -- referencia a households(id); se agrega como FK más abajo
   created_at timestamptz not null default now()
 );
 
@@ -122,7 +123,7 @@ create table gastos (
   unidad text not null default 'unidades', -- 'kg' | 'unidades' | etc.
   fecha date not null default current_date,
   notas text,
-  created_by uuid not null references auth.users(id),
+  created_by uuid references auth.users(id), -- nullable: se pone en null si esa persona borra su cuenta
   created_at timestamptz not null default now()
 );
 
@@ -193,9 +194,61 @@ declare
 begin
   insert into households (nombre) values (nombre_hogar) returning id into nuevo_id;
   insert into household_members (household_id, user_id, rol) values (nuevo_id, auth.uid(), 'admin');
+  update profiles set hogar_activo_id = nuevo_id where id = auth.uid();
   return nuevo_id;
 end;
-$$ language plpgsql security definer;
+$$ language plpgsql security definer set search_path = public;
+-- ------------------------------------------
+alter table profiles
+  add constraint profiles_hogar_activo_fkey foreign key (hogar_activo_id) references households(id);
+
+-- ------------------------------------------
+-- Unirse a un hogar existente con un código de invitación
+-- (RPC en vez de consulta directa: el código de invitación de un hogar
+-- del que aún NO eres miembro no es visible bajo RLS normal, así que
+-- esta función corre con privilegios elevados para validarlo y unirte).
+-- ------------------------------------------
+create or replace function join_household_by_code(codigo_invitacion text)
+returns uuid as $$
+declare
+  inv record;
+begin
+  select * into inv from household_invites
+    where codigo = codigo_invitacion and used_at is null and expires_at > now();
+
+  if inv is null then
+    raise exception 'Código de invitación inválido o expirado';
+  end if;
+
+  insert into household_members (household_id, user_id, rol)
+    values (inv.household_id, auth.uid(), 'miembro')
+    on conflict do nothing;
+
+  update household_invites set used_at = now(), used_by = auth.uid() where id = inv.id;
+  update profiles set hogar_activo_id = inv.household_id where id = auth.uid();
+
+  return inv.household_id;
+end;
+$$ language plpgsql security definer set search_path = public;
+
+-- ------------------------------------------
+-- Eliminar mi cuenta permanentemente
+-- ------------------------------------------
+create or replace function delete_my_account()
+returns void as $$
+declare
+  uid uuid := auth.uid();
+begin
+  update gastos set created_by = null where created_by = uid;
+  delete from household_invites where created_by = uid or used_by = uid;
+  delete from household_members where user_id = uid;
+  delete from profiles where id = uid;
+  delete from auth.users where id = uid;
+end;
+$$ language plpgsql security definer set search_path = public, auth;
+
+grant execute on function join_household_by_code(text) to authenticated;
+grant execute on function delete_my_account() to authenticated;
 
 -- ------------------------------------------
 -- Categorías por defecto al crear un hogar nuevo
