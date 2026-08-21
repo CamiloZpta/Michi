@@ -3,6 +3,7 @@ import { getOrCreateHousehold } from '@/lib/household'
 import { estimarInventario, totalEnRango, costoDiarioPorGato, type Gasto } from '@/lib/metrics'
 import { PawMeter } from '@/components/PawMeter'
 import { GastosPorCategoriaChart } from '@/components/GastosPorCategoriaChart'
+import { CatMoodRow } from '@/components/CatMoodAvatar'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,7 +14,11 @@ export default async function ResumenPage() {
   const [{ data: gastos }, { data: categorias }, { data: gatos }] = await Promise.all([
     supabase.from('gastos').select('*').eq('household_id', householdId).order('fecha'),
     supabase.from('categorias').select('*').eq('household_id', householdId),
-    supabase.from('cats').select('id, nombre').eq('household_id', householdId).eq('activo', true),
+    supabase
+      .from('cats')
+      .select('id, nombre, color_pelaje, patron_pelaje, ojos')
+      .eq('household_id', householdId)
+      .eq('activo', true),
   ])
 
   const todosGastos = (gastos ?? []) as Gasto[]
@@ -28,9 +33,15 @@ export default async function ResumenPage() {
 
   const gastoMes = totalEnRango(todosGastos, inicioMes, finMes)
   const gastoAnio = totalEnRango(todosGastos, inicioAnio, finAnio)
-  const costoDiario = costoDiarioPorGato(gastoMes, numGatos)
 
   const categoriasConsumibles = todasCategorias.filter((c) => c.es_consumible)
+  const idsConsumibles = new Set(categoriasConsumibles.map((c) => c.id))
+  // El costo diario por gato solo cuenta lo esencial (alimento, arena, y
+  // cualquier otra categoría marcada como "consumible") -- juguetes, salud
+  // u otros gastos puntuales no deberían inflar este número.
+  const gastosEsencialesMes = todosGastos.filter((g) => idsConsumibles.has(g.categoria_id))
+  const gastoEsencialMes = totalEnRango(gastosEsencialesMes, inicioMes, finMes)
+  const costoDiario = costoDiarioPorGato(gastoEsencialMes, numGatos)
 
   const gastosPorCategoriaMap = new Map<string, { nombre: string; total: number }>()
   for (const g of todosGastos.filter((g) => new Date(g.fecha) >= inicioMes && new Date(g.fecha) < finMes)) {
@@ -47,9 +58,15 @@ export default async function ResumenPage() {
   return (
     <div className="flex flex-col gap-8 max-w-5xl">
       <div>
-        <h1 className="text-3xl font-semibold mb-1">Resumen</h1>
+        <h1 className="text-2xl font-semibold mb-1">Resumen</h1>
         <p className="text-ink-soft">Cómo van las cuentas de la casa este mes.</p>
       </div>
+
+      {(gatos ?? []).length > 0 && (
+        <div className="card-michi">
+          <CatMoodRow gatos={gatos ?? []} />
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="card-michi">
@@ -57,8 +74,11 @@ export default async function ResumenPage() {
           <p className="stat-number">{fmt(gastoMes)}</p>
         </div>
         <div className="card-michi">
-          <p className="label-michi">Costo diario por gato ({numGatos})</p>
+          <p className="label-michi">Costo diario por gato</p>
           <p className="stat-number">{fmt(costoDiario)}</p>
+          <p className="text-xs text-ink-soft mt-1">
+            Alimento + arena ÷ {numGatos} {numGatos === 1 ? 'gato' : 'gatos'}
+          </p>
         </div>
         <div className="card-michi">
           <p className="label-michi">Acumulado del año</p>

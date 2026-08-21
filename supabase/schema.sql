@@ -251,6 +251,26 @@ grant execute on function join_household_by_code(text) to authenticated;
 grant execute on function delete_my_account() to authenticated;
 
 -- ------------------------------------------
+-- RECORDATORIOS (citas, vacunas, cirugías, etc.)
+-- ------------------------------------------
+create table recordatorios (
+  id uuid primary key default gen_random_uuid(),
+  household_id uuid not null references households(id) on delete cascade,
+  nombre text not null,
+  descripcion text,
+  fecha date not null,
+  hora time,
+  lugar text,
+  created_by uuid references auth.users(id),
+  created_at timestamptz not null default now()
+);
+
+alter table recordatorios enable row level security;
+create policy "CRUD recordatorios del hogar" on recordatorios for all
+  using (is_household_member(household_id))
+  with check (is_household_member(household_id));
+
+-- ------------------------------------------
 -- Categorías por defecto al crear un hogar nuevo
 -- ------------------------------------------
 create or replace function seed_default_categorias()

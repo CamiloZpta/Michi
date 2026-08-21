@@ -19,11 +19,11 @@ export function TendenciaChart({ gastos, categorias }: { gastos: Gasto[]; catego
       })
 
     return Array.from(porFecha.entries())
+      .sort(([fechaA], [fechaB]) => (fechaA > fechaB ? 1 : -1))
       .map(([fecha, { precio, cantidad }]) => ({
         fecha: new Date(fecha).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' }),
         precioPorUnidad: cantidad > 0 ? Math.round(precio / cantidad) : 0,
       }))
-      .sort((a, b) => (a.fecha > b.fecha ? 1 : -1))
   }, [gastos, categoriaId])
 
   if (categorias.length === 0) {

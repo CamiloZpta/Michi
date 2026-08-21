@@ -7,6 +7,7 @@ type GastoRow = {
   precio: number
   cantidad_total: number
   unidad: string
+  categoria_id?: string
   categorias: { nombre: string; icono: string } | null
 }
 

@@ -5,7 +5,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="min-h-screen bg-beige-100">
       <header className="max-w-5xl mx-auto px-4 sm:px-6 pt-6">
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center justify-center gap-2 mb-4">
           <PawLogo size={28} className="text-rose-500" />
           <span className="logo-wordmark text-3xl">Michi</span>
         </div>

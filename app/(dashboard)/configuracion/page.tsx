@@ -28,7 +28,7 @@ export default async function ConfiguracionPage() {
   return (
     <div className="flex flex-col gap-8 max-w-2xl">
       <div>
-        <h1 className="text-3xl font-semibold mb-1">Configuración</h1>
+        <h1 className="text-2xl font-semibold mb-1">Configuración</h1>
         <p className="text-ink-soft">Tu cuenta, tus hogares, y cómo salir si algún día quieres irte.</p>
       </div>
 

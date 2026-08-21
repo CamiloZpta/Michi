@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { getOrCreateHousehold } from '@/lib/household'
 import { CatCard } from '@/components/CatCard'
-import { NuevoGatoForm } from '@/components/NuevoGatoForm'
+import { AgregarGatoToggle } from '@/components/AgregarGatoToggle'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,7 +19,7 @@ export default async function GatosPage() {
   return (
     <div className="flex flex-col gap-8 max-w-4xl">
       <div>
-        <h1 className="text-3xl font-semibold mb-1">Nuestros gatos</h1>
+        <h1 className="text-2xl font-semibold mb-1">Nuestros gatos</h1>
         <p className="text-ink-soft">Los perfiles de cada gato de la casa.</p>
       </div>
 
@@ -29,10 +29,7 @@ export default async function GatosPage() {
         ))}
       </div>
 
-      <div className="card-michi">
-        <h2 className="text-xl font-display font-semibold mb-4">➕ Agregar un gato</h2>
-        <NuevoGatoForm householdId={householdId} />
-      </div>
+      <AgregarGatoToggle householdId={householdId} />
     </div>
   )
 }

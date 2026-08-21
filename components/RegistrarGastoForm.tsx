@@ -11,10 +11,12 @@ export function RegistrarGastoForm({
   householdId,
   categorias,
   gatos,
+  onGuardado,
 }: {
   householdId: string
   categorias: Categoria[]
   gatos: Gato[]
+  onGuardado?: () => void
 }) {
   const router = useRouter()
   const supabase = createClient()
@@ -47,9 +49,9 @@ export function RegistrarGastoForm({
     if (error) {
       setMensaje(`Error: ${error.message}`)
     } else {
-      setMensaje('¡Guardado! ✅')
       ;(e.target as HTMLFormElement).reset()
       router.refresh()
+      onGuardado?.()
     }
   }
 
@@ -57,7 +59,7 @@ export function RegistrarGastoForm({
 
   return (
     <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div>
+      <div className="min-w-0">
         <label className="label-michi">Categoría</label>
         <select name="categoria_id" required className="input-michi">
           {categorias.map((c) => (
@@ -67,7 +69,7 @@ export function RegistrarGastoForm({
           ))}
         </select>
       </div>
-      <div>
+      <div className="min-w-0">
         <label className="label-michi">¿Para cuál gato? (opcional)</label>
         <select name="cat_id" className="input-michi">
           <option value="">General / ambos</option>
@@ -78,23 +80,23 @@ export function RegistrarGastoForm({
           ))}
         </select>
       </div>
-      <div className="sm:col-span-2">
+      <div className="sm:col-span-2 min-w-0">
         <label className="label-michi">Producto</label>
         <input name="producto" required className="input-michi" placeholder="Ej. Croquetas salmón 3kg" />
       </div>
-      <div>
+      <div className="min-w-0">
         <label className="label-michi">Precio</label>
         <input name="precio" type="number" step="0.01" min="0" required className="input-michi" />
       </div>
-      <div>
+      <div className="min-w-0">
         <label className="label-michi">Fecha</label>
         <input name="fecha" type="date" defaultValue={hoy} required className="input-michi" />
       </div>
-      <div>
+      <div className="min-w-0">
         <label className="label-michi">Cantidad</label>
         <input name="cantidad_total" type="number" step="0.01" min="0" required className="input-michi" />
       </div>
-      <div>
+      <div className="min-w-0">
         <label className="label-michi">Unidad</label>
         <select name="unidad" className="input-michi">
           <option value="kg">kg</option>
@@ -108,7 +110,7 @@ export function RegistrarGastoForm({
         <button type="submit" disabled={guardando} className="btn-primary">
           {guardando ? 'Guardando…' : 'Guardar gasto'}
         </button>
-        {mensaje && <span className="text-sm text-ink-soft">{mensaje}</span>}
+        {mensaje && <span className="text-sm text-alerta">{mensaje}</span>}
       </div>
     </form>
   )

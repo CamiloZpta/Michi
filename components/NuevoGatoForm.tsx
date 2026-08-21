@@ -12,7 +12,13 @@ import {
   type OjosKey,
 } from './CatAvatar'
 
-export function NuevoGatoForm({ householdId }: { householdId: string }) {
+export function NuevoGatoForm({
+  householdId,
+  onGuardado,
+}: {
+  householdId: string
+  onGuardado?: () => void
+}) {
   const router = useRouter()
   const supabase = createClient()
   const [guardando, setGuardando] = useState(false)
@@ -40,6 +46,7 @@ export function NuevoGatoForm({ householdId }: { householdId: string }) {
     if (!error) {
       ;(e.target as HTMLFormElement).reset()
       router.refresh()
+      onGuardado?.()
     }
   }
 
@@ -51,11 +58,11 @@ export function NuevoGatoForm({ householdId }: { householdId: string }) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
-        <div>
+        <div className="min-w-0">
           <label className="label-michi">Nombre</label>
           <input name="nombre" required className="input-michi" placeholder="Nombre del gato" />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="label-michi">Sexo</label>
           <select name="sexo" className="input-michi">
             <option value="">No especificado</option>
@@ -63,11 +70,11 @@ export function NuevoGatoForm({ householdId }: { householdId: string }) {
             <option value="hembra">Hembra</option>
           </select>
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="label-michi">Fecha de nacimiento aprox.</label>
           <input name="fecha_nacimiento_aprox" type="date" className="input-michi" />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="label-michi">Contextura</label>
           <select name="contextura" className="input-michi" defaultValue="normal">
             <option value="delgado">Delgado</option>
@@ -76,7 +83,7 @@ export function NuevoGatoForm({ householdId }: { householdId: string }) {
             <option value="sobrepeso">Con sobrepeso</option>
           </select>
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="label-michi">Color de pelaje</label>
           <select
             className="input-michi"
@@ -90,7 +97,7 @@ export function NuevoGatoForm({ householdId }: { householdId: string }) {
             ))}
           </select>
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="label-michi">Patrón</label>
           <select
             className="input-michi"
@@ -104,7 +111,7 @@ export function NuevoGatoForm({ householdId }: { householdId: string }) {
             <option value="colorpoint">Point (orejas/cara oscuras, tipo siamés)</option>
           </select>
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="label-michi">Color de ojos</label>
           <select
             className="input-michi"

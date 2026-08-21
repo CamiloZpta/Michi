@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 @layer base {
   body {
     @apply bg-beige-100 text-ink font-body antialiased;
@@ -45,9 +54,15 @@
 
   /* ===== Campos de formulario ===== */
   .input-michi {
-    @apply bg-beige-50 border-2 border-rose-100 rounded-2xl px-4 py-2.5
+    @apply bg-beige-50 border-2 border-rose-100 rounded-2xl px-4 py-2.5 min-w-0 max-w-full box-border
            text-ink placeholder:text-ink-soft/50 focus:border-rose-400 outline-none w-full font-body;
     transition: border-color 0.15s ease-out;
+  }
+  /* iOS reserva un ancho interno propio en <input type="date"> que puede
+     desbordar su contenedor dentro de layouts grid/flex si no se limita
+     explícitamente. */
+  input[type='date'].input-michi {
+    @apply text-sm px-3;
   }
 
   .label-michi {
@@ -61,7 +76,7 @@
   /* ===== Pestañas de navegación =====
      Píldoras suaves y redondeadas, la activa se rellena de color. */
   .tab-pill {
-    @apply relative font-display font-semibold text-sm px-4 py-2 rounded-full whitespace-nowrap
+    @apply relative font-display font-semibold text-base px-5 py-2.5 rounded-full whitespace-nowrap
            text-ink-soft transition-colors duration-150;
   }
   .tab-pill[data-active='true'] {

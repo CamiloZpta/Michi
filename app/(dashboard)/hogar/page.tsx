@@ -30,12 +30,12 @@ export default async function HogarPage() {
   return (
     <div className="flex flex-col gap-8 max-w-2xl">
       <div>
-        <h1 className="text-3xl font-semibold mb-1">{household?.nombre ?? 'Nuestro hogar'}</h1>
+        <h1 className="text-2xl font-semibold mb-1">{household?.nombre ?? 'Nuestro hogar'}</h1>
         <p className="text-ink-soft">Quiénes tienen acceso a los datos de los gatos de la casa.</p>
       </div>
 
       <div className="card-michi">
-        <h2 className="text-xl font-display font-semibold mb-4">👥 Miembros</h2>
+        <h2 className="text-xl font-display font-semibold mb-4">👥 Papás gatunos</h2>
         <ul className="flex flex-col gap-2">
           {(miembros ?? []).map((m) => (
             <li key={m.user_id} className="flex justify-between text-sm border-b border-rose-50 py-2.5">

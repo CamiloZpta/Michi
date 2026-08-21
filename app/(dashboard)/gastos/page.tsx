@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { getOrCreateHousehold } from '@/lib/household'
 import { RegistrarGastoForm } from '@/components/RegistrarGastoForm'
-import { HistorialGastos } from '@/components/HistorialGastos'
+import { HistorialGastosFiltrable } from '@/components/HistorialGastosFiltrable'
+import { FloatingAddButton } from '@/components/FloatingAddButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,25 +21,26 @@ export default async function GastosPage() {
   ])
 
   return (
-    <div className="flex flex-col gap-8 max-w-4xl">
+    <div className="flex flex-col gap-6 max-w-4xl pb-20">
       <div>
-        <h1 className="text-3xl font-semibold mb-1">Gastos</h1>
-        <p className="text-ink-soft">Registra una compra nueva o revisa el historial completo.</p>
+        <h1 className="text-2xl font-semibold mb-1">Historial de gastos</h1>
+        <p className="text-ink-soft">Filtra por fecha o categoría. Usa el botón + para registrar una compra.</p>
       </div>
 
       <div className="card-michi">
-        <h2 className="text-xl font-display font-semibold mb-4">➕ Registrar compra</h2>
-        <RegistrarGastoForm
-          householdId={householdId}
-          categorias={categorias ?? []}
-          gatos={gatos ?? []}
-        />
+        <HistorialGastosFiltrable gastos={gastos ?? []} categorias={categorias ?? []} />
       </div>
 
-      <div className="card-michi">
-        <h2 className="text-xl font-display font-semibold mb-4">🧾 Historial</h2>
-        <HistorialGastos gastos={gastos ?? []} />
-      </div>
+      <FloatingAddButton label="Registrar compra">
+        {(cerrar) => (
+          <RegistrarGastoForm
+            householdId={householdId}
+            categorias={categorias ?? []}
+            gatos={gatos ?? []}
+            onGuardado={cerrar}
+          />
+        )}
+      </FloatingAddButton>
     </div>
   )
 }
