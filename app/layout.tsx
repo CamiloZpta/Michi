@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   title: 'Michi · Gastos y cuidado de gatos',
   description: 'Lleva el control de los gastos y el cuidado de tus gatos, en familia.',
   icons: {
-    icon: '/icon.svg',
-    apple: '/apple-icon.png',
+    icon: [{ url: '/favicon.ico' }],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
   manifest: '/manifest.json',
 }
