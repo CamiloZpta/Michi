@@ -1,8 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { getOrCreateHousehold } from '@/lib/household'
 import { ListaRecordatorios } from '@/components/ListaRecordatorios'
-import { NuevoRecordatorioForm } from '@/components/NuevoRecordatorioForm'
-import { FloatingAddButton } from '@/components/FloatingAddButton'
+import { NuevoRecordatorioFloating } from '@/components/NuevoRecordatorioFloating'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,9 +24,7 @@ export default async function RecordatoriosPage() {
 
       <ListaRecordatorios recordatorios={recordatorios ?? []} />
 
-      <FloatingAddButton label="Nuevo recordatorio">
-        {(cerrar) => <NuevoRecordatorioForm householdId={householdId} onGuardado={cerrar} />}
-      </FloatingAddButton>
+      <NuevoRecordatorioFloating householdId={householdId} />
     </div>
   )
 }

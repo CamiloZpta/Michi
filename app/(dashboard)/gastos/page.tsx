@@ -1,8 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { getOrCreateHousehold } from '@/lib/household'
-import { RegistrarGastoForm } from '@/components/RegistrarGastoForm'
 import { HistorialGastosFiltrable } from '@/components/HistorialGastosFiltrable'
-import { FloatingAddButton } from '@/components/FloatingAddButton'
+import { RegistrarGastoFloating } from '@/components/RegistrarGastoFloating'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,16 +30,7 @@ export default async function GastosPage() {
         <HistorialGastosFiltrable gastos={gastos ?? []} categorias={categorias ?? []} />
       </div>
 
-      <FloatingAddButton label="Registrar compra">
-        {(cerrar) => (
-          <RegistrarGastoForm
-            householdId={householdId}
-            categorias={categorias ?? []}
-            gatos={gatos ?? []}
-            onGuardado={cerrar}
-          />
-        )}
-      </FloatingAddButton>
+      <RegistrarGastoFloating householdId={householdId} categorias={categorias ?? []} gatos={gatos ?? []} />
     </div>
   )
 }
